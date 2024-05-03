@@ -8,15 +8,13 @@ public class InputManager : MonoBehaviour , IDragHandler,IPointerDownHandler
 {
     private float _horizontal;
     private bool _firstClick = true;
-    
-    public delegate void HorizontalInput (float horizontal);
-    public static event HorizontalInput OnDragging;
+
     
 
     public void OnDrag(PointerEventData eventData)
     {
         _horizontal= eventData.delta.x;
-        OnDragging?.Invoke(_horizontal);
+        EventManager.Trigger(EventList.OnHorizontalDrag, _horizontal);
     }
 
     public void OnPointerDown(PointerEventData eventData)

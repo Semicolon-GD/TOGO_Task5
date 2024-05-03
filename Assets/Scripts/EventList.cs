@@ -11,4 +11,5 @@ public enum EventList
     OnCollectiblePickup,
     OnObstacleHit,
     OnGateCrossed,
+    OnHorizontalDrag,
 }
