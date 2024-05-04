@@ -10,6 +10,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private GameObject stackPoint;
     [SerializeField] private GameObject stackParent;
+    
+    [SerializeField] private Animator playerAnimator;
 
 
     private List<GameObject> _stackList = new List<GameObject>();
@@ -36,6 +38,8 @@ public class PlayerController : MonoBehaviour
         EventManager.Subscribe(EventList.GameStarted, StartMovement);
         EventManager.Subscribe(EventList.OnHorizontalDrag,HorizontalMovement);
         EventManager.Subscribe(EventList.OnCollectiblePickup, AddStack);
+        EventManager.Subscribe(EventList.OnObstacleHit,RemoveStack);
+        EventManager.Subscribe(EventList.OnFinishLineCrossed, StopMovement);
     }
 
     private void OnDisable()
@@ -43,11 +47,20 @@ public class PlayerController : MonoBehaviour
         EventManager.Unsubscribe(EventList.GameStarted, StartMovement);
         EventManager.Unsubscribe(EventList.OnHorizontalDrag,HorizontalMovement);
         EventManager.Unsubscribe(EventList.OnCollectiblePickup, AddStack);
+        EventManager.Unsubscribe(EventList.OnObstacleHit,RemoveStack);
+        EventManager.Unsubscribe(EventList.OnFinishLineCrossed, StopMovement);
     }
     
     private void StartMovement()
     {
         forwardSpeed = _givenSpeed;
+        playerAnimator.SetTrigger("isGameStarted");
+    }
+
+    void StopMovement()
+    {
+        forwardSpeed=0;
+        EventManager.Unsubscribe(EventList.OnHorizontalDrag,HorizontalMovement);
     }
     
     private void HorizontalMovement(float horizontal)
@@ -77,8 +90,24 @@ public class PlayerController : MonoBehaviour
         {
             _stackList[^1].GetComponent<CollectibleMovement>().SetLeadTransform(_stackList[^2].transform);
         }
+    }
+    
+    private void RemoveStack(GameObject collectible)
+    {
+        switch (_stackList.Count)
         {
-            
+            case >= 1:
+            {
+                var lostCollectible = _stackList[^1];
+                lostCollectible.transform.parent = null;
+                _stackList.Remove(lostCollectible);
+                lostCollectible.gameObject.SetActive(false);
+                break;
+            }
+            case 0:
+                EventManager.Trigger(EventList.GameFailed);
+                break;
         }
+        stackPoint.transform.localPosition -= Vector3.forward * 2;
     }
 }

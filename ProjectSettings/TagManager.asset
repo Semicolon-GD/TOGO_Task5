@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Collectible
   - Collected
+  - Gate
   layers:
   - Default
   - TransparentFX

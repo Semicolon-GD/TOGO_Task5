@@ -12,4 +12,5 @@ public enum EventList
     OnObstacleHit,
     OnGateCrossed,
     OnHorizontalDrag,
+    OnFinishLineCrossed,
 }

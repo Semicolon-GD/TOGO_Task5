@@ -6,9 +6,25 @@ using UnityEngine;
 
 public class CollectibleMovement : MonoBehaviour
 {
+   public enum CollectibleType
+   {
+      Cube,
+      Sphere
+   }
+   
+   [SerializeField] private MeshFilter meshFilter;
+   [SerializeField] private Mesh cube;
+   [SerializeField] private Mesh sphere;
+
+   public CollectibleType _currentType;
    private Transform _currentLeadTransform;
    private float _currentVelocity=0f;
    private float _smoothTime=0.2f;
+
+   private void Start()
+   {
+      _currentType = CollectibleType.Cube;
+   }
 
    private void Update()
    {
@@ -16,17 +32,20 @@ public class CollectibleMovement : MonoBehaviour
          return;
       else
       {
-         /*transform.position=Vector3.Lerp(transform.position,_currentLeadTransform.position,Time.deltaTime);*/
          transform.position=new Vector3(Mathf.SmoothDamp(transform.position.x,_currentLeadTransform.position.x,ref _currentVelocity,_smoothTime),
             transform.position.y,transform.position.z);
       }
    }
-   
-   public void SetLeadTransform(Transform leadTransform)
+
+   private void OnEnable()
    {
-      _currentLeadTransform = leadTransform;
+      EventManager.Subscribe(EventList.OnFinishLineCrossed, StopFollowing);
    }
 
+   private void OnDisable()
+   {
+      EventManager.Unsubscribe(EventList.OnFinishLineCrossed, StopFollowing);
+   }
 
    private void OnTriggerEnter(Collider other)
    {
@@ -38,9 +57,33 @@ public class CollectibleMovement : MonoBehaviour
          case "Collected":
             EventManager.Trigger(EventList.OnCollectiblePickup,this.gameObject);
             break;
-         case "Obstacle":
-            EventManager.Trigger(EventList.OnObstacleHit);
+         case "Gate":
+            ChangeMesh();
             break;
+      }
+   }
+
+   void StopFollowing()
+   {
+      _currentLeadTransform = null;
+   }
+   public void SetLeadTransform(Transform leadTransform)
+   {
+      _currentLeadTransform = leadTransform;
+   }
+
+   
+   void ChangeMesh()
+   {
+      if (meshFilter.sharedMesh==cube)
+      {
+         meshFilter.sharedMesh = sphere;
+         _currentType= CollectibleType.Sphere;
+      }
+      else if (meshFilter.sharedMesh==sphere)
+      {
+         meshFilter.sharedMesh = cube;
+         _currentType= CollectibleType.Cube;
       }
    }
 }
