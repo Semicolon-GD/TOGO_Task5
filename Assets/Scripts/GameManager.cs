@@ -52,7 +52,7 @@ public class GameManager : MonoBehaviour
         {
             child.transform.position = stackPoint.transform.position;
             stackPoint.transform.position += Vector3.up;
-            yield return new WaitForSeconds(0.15f);
+            yield return new WaitForSeconds(0.50f);
            // Debug.Log("waited for 0.5 seconds");
         }
     }
