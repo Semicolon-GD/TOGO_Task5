@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviour
     void StopMovement()
     {
         forwardSpeed=0;
-        EventManager.Unsubscribe(EventList.OnHorizontalDrag,HorizontalMovement);
+        //EventManager.Unsubscribe(EventList.OnHorizontalDrag,HorizontalMovement);
     }
     
     private void HorizontalMovement(float horizontal)

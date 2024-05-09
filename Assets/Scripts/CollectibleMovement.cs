@@ -66,6 +66,7 @@ public class CollectibleMovement : MonoBehaviour
    void StopFollowing()
    {
       _currentLeadTransform = null;
+      transform.GetComponent<BoxCollider>().isTrigger = true;
    }
    public void SetLeadTransform(Transform leadTransform)
    {

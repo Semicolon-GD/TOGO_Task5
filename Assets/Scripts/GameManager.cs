@@ -51,7 +51,7 @@ public class GameManager : MonoBehaviour
         foreach (Transform child in collectibleParent.transform)
         {
             child.transform.position = stackPoint.transform.position;
-            stackPoint.transform.position += Vector3.up;
+            stackPoint.transform.position += Vector3.up*1.5f;
             yield return new WaitForSeconds(0.50f);
            // Debug.Log("waited for 0.5 seconds");
         }
