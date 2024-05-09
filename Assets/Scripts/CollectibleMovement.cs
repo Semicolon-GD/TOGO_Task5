@@ -8,13 +8,12 @@ public class CollectibleMovement : MonoBehaviour
 {
    public enum CollectibleType
    {
-      Cube,
-      Sphere
+      Cow,
+      Sheep,
    }
    
-   [SerializeField] private MeshFilter meshFilter;
-   [SerializeField] private Mesh cube;
-   [SerializeField] private Mesh sphere;
+   [SerializeField] private GameObject cow;
+   [SerializeField] private GameObject sheep;
 
    public CollectibleType _currentType;
    private Transform _currentLeadTransform;
@@ -23,7 +22,17 @@ public class CollectibleMovement : MonoBehaviour
 
    private void Start()
    {
-      _currentType = CollectibleType.Cube;
+      switch (_currentType)
+      {
+         case CollectibleType.Cow:
+            cow.gameObject.SetActive(true);
+            sheep.gameObject.SetActive(false);
+            break;
+         case CollectibleType.Sheep:
+            cow.gameObject.SetActive(false);
+            sheep.gameObject.SetActive(true);
+            break;
+      }
    }
 
    private void Update()
@@ -76,15 +85,18 @@ public class CollectibleMovement : MonoBehaviour
    
    void ChangeMesh()
    {
-      if (meshFilter.sharedMesh==cube)
+      switch (_currentType)
       {
-         meshFilter.sharedMesh = sphere;
-         _currentType= CollectibleType.Sphere;
-      }
-      else if (meshFilter.sharedMesh==sphere)
-      {
-         meshFilter.sharedMesh = cube;
-         _currentType= CollectibleType.Cube;
+         case CollectibleType.Cow:
+            _currentType = CollectibleType.Sheep;
+            cow.gameObject.SetActive(false);
+            sheep.gameObject.SetActive(true);
+            break;
+         case CollectibleType.Sheep:
+            _currentType = CollectibleType.Cow;
+            cow.gameObject.SetActive(true);
+            sheep.gameObject.SetActive(false);
+            break;
       }
    }
 }

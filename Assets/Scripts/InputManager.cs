@@ -19,10 +19,8 @@ public class InputManager : MonoBehaviour , IDragHandler,IPointerDownHandler
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        if (_firstClick)
-        {
-            EventManager.Trigger(EventList.GameStarted);
-            _firstClick = false;
-        }
+        if (!_firstClick) return;
+        EventManager.Trigger(EventList.GameStarted);
+        _firstClick = false;
     }
 }

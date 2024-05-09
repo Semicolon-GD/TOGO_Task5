@@ -87,32 +87,5 @@ public static class EventManager
     }
     
     #endregion
-
-    /*#region IEnumerator Events
-
-    public delegate IEnumerator IEnumeratorAction();
-    private static Dictionary<EventList,IEnumeratorAction> _eventTableIenumerator= new Dictionary<EventList, IEnumeratorAction>();
-
-    public static void Subscribe(EventList eventName, IEnumeratorAction action)
-    {
-        if (!_eventTableIenumerator.ContainsKey(eventName))
-            _eventTableIenumerator[eventName] = action;
-        else _eventTableIenumerator[eventName] += action;
-    }
     
-    public static void Unsubscribe(EventList eventName, IEnumeratorAction action)
-    {
-        if (_eventTableIenumerator[eventName] != null)
-            _eventTableIenumerator[eventName] -= action;
-        if (_eventTableIenumerator[eventName] == null)
-            _eventTableIenumerator.Remove(eventName);
-    }
-    
-    public static void Trigger(EventList eventName, IEnumeratorAction action)
-    {
-        if (_eventTableIenumerator[eventName] != null)
-            _eventTableIenumerator[eventName]?.Invoke();
-    }
-
-    #endregion*/
 }

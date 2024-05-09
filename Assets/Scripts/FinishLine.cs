@@ -11,7 +11,6 @@ public class FinishLine : MonoBehaviour
       if (other.CompareTag("Player"))
       {
         EventManager.Trigger(EventList.OnFinishLineCrossed);
-      
       }
    }
 

@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject stackParent;
     
     [SerializeField] private Animator playerAnimator;
+    
+    [SerializeField] private ParticleSystem winParticle;
 
 
     private List<GameObject> _stackList = new List<GameObject>();
@@ -39,7 +41,8 @@ public class PlayerController : MonoBehaviour
         EventManager.Subscribe(EventList.OnHorizontalDrag,HorizontalMovement);
         EventManager.Subscribe(EventList.OnCollectiblePickup, AddStack);
         EventManager.Subscribe(EventList.OnObstacleHit,RemoveStack);
-        EventManager.Subscribe(EventList.OnFinishLineCrossed, StopMovement);
+        EventManager.Subscribe(EventList.OnFinishLineCrossed, GameFinished);
+        EventManager.Subscribe(EventList.GameFailed,GameFailed);
     }
 
     private void OnDisable()
@@ -48,7 +51,8 @@ public class PlayerController : MonoBehaviour
         EventManager.Unsubscribe(EventList.OnHorizontalDrag,HorizontalMovement);
         EventManager.Unsubscribe(EventList.OnCollectiblePickup, AddStack);
         EventManager.Unsubscribe(EventList.OnObstacleHit,RemoveStack);
-        EventManager.Unsubscribe(EventList.OnFinishLineCrossed, StopMovement);
+        EventManager.Unsubscribe(EventList.OnFinishLineCrossed, GameFinished);
+        EventManager.Unsubscribe(EventList.GameFailed,GameFailed);
     }
     
     private void StartMovement()
@@ -57,10 +61,28 @@ public class PlayerController : MonoBehaviour
         playerAnimator.SetTrigger("isGameStarted");
     }
 
-    void StopMovement()
+    void GameFinished()
     {
         forwardSpeed=0;
-        //EventManager.Unsubscribe(EventList.OnHorizontalDrag,HorizontalMovement);
+        transform.Rotate(0,180,0);
+        if (_stackList.Count>0)
+        {
+            EventManager.Trigger(EventList.GameWon);
+            playerAnimator.SetTrigger("Win");
+            winParticle.Play();
+        }
+        else
+        {
+            EventManager.Trigger(EventList.GameFailed);
+            playerAnimator.SetTrigger("Fail");
+        }
+        
+    }
+
+    void GameFailed()
+    {
+        forwardSpeed=0;
+        playerAnimator.SetTrigger("Fail");
     }
     
     private void HorizontalMovement(float horizontal)
